@@ -280,9 +280,9 @@ public class MainActivity extends AppCompatActivity {
                 String fullLine = line1 + line2;
 */
 
-                String position = "150";      // For 6" wristband
+//                String position = "200";      // For 6" wristband
 //                String position = "400";      // for 7" wristband
-//                String position = "1600"    // for 11" wristband
+                String position = "2000";    // for 11" wristband
 
 
                  String line1Text =  pr.m_id + " " + pr.m_first + " " + pr.m_middle + " " +
@@ -293,8 +293,8 @@ public class MainActivity extends AppCompatActivity {
                   */
                 int line1Length = line1Text.length();
                 String line2Text = pr.m_dob +  " " + pr.m_gender + " " + pr.m_curp;
-                String line1 = "^XA^FO1,10^FS^FT200," + position + "^A0R,60,60^FD" + line1Text + " " + "^FS";
-                String line2 = "^FO1,10^FS^FT65," + position + "^A0R,60,60^FD" + line2Text + "^FS^XZ";
+                String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
+                String line2 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line2Text + "^FS^XZ";
 
                 String fullLine = line1 + line2;
                 configLabel = fullLine.getBytes();
