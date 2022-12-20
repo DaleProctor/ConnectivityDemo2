@@ -18,6 +18,7 @@
 package com.zebra.connectivitydemo;
 
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,8 @@ import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
 import com.zebra.sdk.comm.TcpConnection;
+import com.zebra.sdk.graphics.ZebraImageFactory;
+import com.zebra.sdk.graphics.ZebraImageI;
 import com.zebra.sdk.printer.PrinterLanguage;
 import com.zebra.sdk.printer.PrinterStatus;
 import com.zebra.sdk.printer.SGD;
@@ -42,6 +45,8 @@ import com.zebra.sdk.printer.ZebraPrinterFactory;
 import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
 import com.zebra.sdk.printer.ZebraPrinterLinkOs;
 
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -322,6 +327,21 @@ public class MainActivity extends AppCompatActivity {
     }
 */
 
+    private void printQRCode() {
+        try {
+            InputStream inputStream = getAssets().open("qr.png");
+            ZebraImageI zebraImageI = ZebraImageFactory.getImage(BitmapFactory.decodeStream(inputStream));
+            // fiddle here with position, size.
+            // w/h -1 is use original size, which is certainly wrong.
+            // docs for printImage at https://techdocs.zebra.com/link-os/2-14/pc/content/com/zebra/sdk/graphics/class-use/ZebraImageI.html
+            // GraphicsUtil.printImage(ZebraImageI image, int x, int y, int width, int height, boolean insideFormat)
+            printer.printImage(zebraImageI,250,0,0,-1,false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void doConnectionTest() {
         printer = connect();
@@ -337,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
             pat.m_gender = "Male";
             pat.m_curp = "123456789abcdef";
             sendTestLabel(pat);
+            printQRCode();
         } else {
             disconnect();
         }
