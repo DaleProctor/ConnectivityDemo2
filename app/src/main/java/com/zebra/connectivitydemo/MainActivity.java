@@ -280,23 +280,25 @@ public class MainActivity extends AppCompatActivity {
                 String fullLine = line1 + line2;
 */
 
-//                String position = "200";      // For 6" wristband
+//                String position = "400";      // For 6" wristband
 //                String position = "400";      // for 7" wristband
                 String position = "2000";    // for 11" wristband
 
-
-                 String line1Text =  pr.m_id + " " + pr.m_first + " " + pr.m_middle + " " +
-                        pr.m_father + " " + pr.m_mother;
+                String box = "^FO80,1800^GB150,150,10^FS";
+                String line1Text =  "ID: " + pr.m_id + "  CURP: " + pr.m_curp;
+//                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father + " " + pr.m_mother;
+                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father.toUpperCase() + " " + pr.m_mother.toUpperCase();
+                String line3Text = pr.m_dob +  " " + pr.m_gender;
                  /*
                     The line1Length can be used to adjust the horizontal position of the
                     printed line if necessary.
                   */
-                int line1Length = line1Text.length();
-                String line2Text = pr.m_dob +  " " + pr.m_gender + " " + pr.m_curp;
-                String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
-                String line2 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line2Text + "^FS^XZ";
+                int line2Length = line2Text.length();
 
-                String fullLine = line1 + line2;
+                String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
+                String line2 = "^FO1,10^FS^FT140," + position + "^A0R,40,40^FD" + line2Text + " " + "^FS";
+                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + box + "^XZ";
+                String fullLine = line1 + line2 + line3;
                 configLabel = fullLine.getBytes();
 
             } else if (printerLanguage == PrinterLanguage.CPCL) {
@@ -332,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             pat.m_father = "Huerta";
             pat.m_mother = "Vargas";
             pat.m_dob = "23OCT2014";
-            pat.m_gender = "male";
+            pat.m_gender = "Male";
             pat.m_curp = "123456789abcdef";
             sendTestLabel(pat);
         } else {
