@@ -17,7 +17,9 @@
 
 package com.zebra.connectivitydemo;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private Button testButton;
     private ZebraPrinter printer;
     private TextView statusField;
-
+    private Context context;
 
 
 
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        context = getApplicationContext();
 
         ipAddressEditText = (EditText) this.findViewById(R.id.ipAddressInput);
         String ip = settings.getString(tcpAddressKey, "");
@@ -333,8 +336,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void printQRCode() {
         try {
-            InputStream inputStream = getAssets().open("qr.png");
-            ZebraImageI zebraImageI = ZebraImageFactory.getImage(BitmapFactory.decodeStream(inputStream));
+            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.qr);
+            ZebraImageI zebraImageI = ZebraImageFactory.getImage(icon);
             // fiddle here with position, size.
             // w/h -1 is use original size, which is certainly wrong.
             // docs for printImage at https://techdocs.zebra.com/link-os/2-14/pc/content/com/zebra/sdk/graphics/class-use/ZebraImageI.html
