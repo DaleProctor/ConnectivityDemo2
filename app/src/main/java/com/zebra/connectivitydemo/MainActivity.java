@@ -290,6 +290,9 @@ public class MainActivity extends AppCompatActivity {
                 String position = "2000";    // for 11" wristband
 
                 String box = "^FO80,1800^GB150,150,10^FS";
+
+                String qrcode = "^FO100,1900^BQN2,10^FDQA," + pr.m_id + "^FS";
+
                 String line1Text =  "ID: " + pr.m_id + "  CURP: " + pr.m_curp;
 //                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father + " " + pr.m_mother;
                 String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father.toUpperCase() + " " + pr.m_mother.toUpperCase();
@@ -302,7 +305,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
                 String line2 = "^FO1,10^FS^FT140," + position + "^A0R,40,40^FD" + line2Text + " " + "^FS";
-                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + box + "^XZ";
+//                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + box + "^XZ";
+                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "JMB^FS" + qrcode + "^XZ";
                 String fullLine = line1 + line2 + line3;
                 configLabel = fullLine.getBytes();
 
