@@ -294,8 +294,14 @@ public class MainActivity extends AppCompatActivity {
 
                 String box = "^FO80,1800^GB150,150,10^FS";
 
-                String qrcode = "^FO100,1900^BQN2,10^FDQA," + pr.m_id + "^FS";
-
+//                String qrcode1 = "^FO100,1900^BQN,2,10^FDQA," + pr.m_id + "^FS";
+//                String qrcode2 = "^FO100,1600^BQN,2,9^FDQA," + pr.m_id + "^FS";
+//                String qrcode3 = "^FO100,1300^BQN,2,8^FDQA," + pr.m_id + "^FS";
+//                String qrcode4 = "^FO100,1100^BQN,2,7^FDQA," + pr.m_id + "^FS";
+//                String qrcode5 = "^FO100,900^BQN,2,6^FDQA," + pr.m_id + "^FS";
+//                String qrcode6 = "^FO100,600^BQN,2,5^FDQA," + pr.m_id + "^FS";
+//                  String qrcode = qrcode1 + qrcode2 + qrcode3 + qrcode4 + qrcode5 + qrcode6;
+                String qrcode = "^FO100,1800^BQN,2,6^FDQA," + pr.m_id + "^FS";
                 String line1Text =  "ID: " + pr.m_id + "  CURP: " + pr.m_curp;
 //                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father + " " + pr.m_mother;
                 String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father.toUpperCase() + " " + pr.m_mother.toUpperCase();
@@ -309,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                 String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
                 String line2 = "^FO1,10^FS^FT140," + position + "^A0R,40,40^FD" + line2Text + " " + "^FS";
 //                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + box + "^XZ";
-                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "JMB^FS" + qrcode + "^XZ";
+                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + qrcode + "^XZ";
                 String fullLine = line1 + line2 + line3;
                 configLabel = fullLine.getBytes();
 
@@ -343,7 +349,8 @@ public class MainActivity extends AppCompatActivity {
             // w/h -1 is use original size, which is certainly wrong.
             // docs for printImage at https://techdocs.zebra.com/link-os/2-14/pc/content/com/zebra/sdk/graphics/class-use/ZebraImageI.html
             // GraphicsUtil.printImage(ZebraImageI image, int x, int y, int width, int height, boolean insideFormat)
-            printer.printImage(zebraImageI,250,0,0,-1,false);
+//            printer.printImage(zebraImageI,250,0,0,-1,false);
+            printer.printImage(zebraImageI,250,20,0,-1,false);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ConnectionException e) {
@@ -364,8 +371,8 @@ public class MainActivity extends AppCompatActivity {
             pat.m_dob = "23OCT2014";
             pat.m_gender = "Male";
             pat.m_curp = "123456789abcdef";
+//            printQRCode();
             sendTestLabel(pat);
-            printQRCode();
         } else {
             disconnect();
         }
