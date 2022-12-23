@@ -272,6 +272,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (printerLanguage == PrinterLanguage.ZPL) {
 
+// String position of the text depending on wristband size. QR position will be screwed up.
+
 //                String position = "400";      // For 6" wristband
 //                String position = "400";      // for 7" wristband
                 String position = "2000";    // for 11" wristband
