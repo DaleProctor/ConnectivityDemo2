@@ -226,6 +226,12 @@ public class MainActivity extends AppCompatActivity {
             if (printerStatus.isReadyToPrint) {
                 byte[] configLabel = getConfigLabel(pr);
                 connection.write(configLabel);
+/*
+*  ENABLE SECOND connection.write() to print the second wristband;
+*  There is a ^PQ command that is support to support the count, but
+*  I could not get it to work
+* */
+
 //                connection.write(configLabel);        // enable line for printing 2 wristbands
                 setStatus("Sending Data", Color.BLUE);
             } else if (printerStatus.isHeadOpen) {
@@ -256,20 +262,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
-   * Returns the command for a test label depending on the printer control language
-   * The test label is a box with the word "TEST" inside of it
-   *
-   * _________________________
-   * |                       |
-   * |                       |
-   * |        TEST           |
-   * |                       |
-   * |                       |
-   * |_______________________|
-   *
-   *
-   */
+
     private byte[] getConfigLabel(PatientRecord pr) {
         byte[] configLabel = null;
 
@@ -278,45 +271,39 @@ public class MainActivity extends AppCompatActivity {
             SGD.SET("device.languages", "zpl", connection);
 
             if (printerLanguage == PrinterLanguage.ZPL) {
-/*                configLabel = "^XA^FO17,16^GB379,371,8^FS^FT65,255^A0N,135,134^FDTEST^FS^XZ".getBytes();
-                configLabel = "^XA^FO17,16^GB379,371,8^FS^FT65,255^A0R,60,60^FDTEST^FS^XZ".getBytes();
-                configLabel = "^XA^FO17,1^FS^FT65,255^A0R,60,60^FDLine One^FS^FO17,16^FDLine Two^FS^XZ".getBytes();
-                configLabel = "^XA^FO10,10^FS^FT65,255^A0R,60,60^FDLine One-10-10^FS^XZ".getBytes();
-
-                String line1 = "^XA^FO1,10^FS^FT200,25^A0R,60,60^FDLine One-1-10 (200-25)^FS";
-                String line2 = "^FO1,10^FS^FT65,25^A0R,60,60^FDLine two-1-10 (65-25)^FS^XZ";
-                String fullLine = line1 + line2;
-*/
 
 //                String position = "400";      // For 6" wristband
 //                String position = "400";      // for 7" wristband
                 String position = "2000";    // for 11" wristband
+/*
+    Format the QR code. this does position, QR Code magnification, and inserts the ID,FATHER_LAST,FIRST_NAME
+    All comma separated
+ */
+                String qrcode = "^FO80,1800^BQN,2,6^FDQA," + pr.m_id + "," + pr.m_father.toUpperCase() + "," + pr.m_first + "^FS";
 
-                String box = "^FO80,1800^GB150,150,10^FS";
-
-//                String qrcode1 = "^FO100,1900^BQN,2,10^FDQA," + pr.m_id + "^FS";
-//                String qrcode2 = "^FO100,1600^BQN,2,9^FDQA," + pr.m_id + "^FS";
-//                String qrcode3 = "^FO100,1300^BQN,2,8^FDQA," + pr.m_id + "^FS";
-//                String qrcode4 = "^FO100,1100^BQN,2,7^FDQA," + pr.m_id + "^FS";
-//                String qrcode5 = "^FO100,900^BQN,2,6^FDQA," + pr.m_id + "^FS";
-//                String qrcode6 = "^FO100,600^BQN,2,5^FDQA," + pr.m_id + "^FS";
-//                  String qrcode = qrcode1 + qrcode2 + qrcode3 + qrcode4 + qrcode5 + qrcode6;
-                String qrcode = "^FO100,1800^BQN,2,6^FDQA," + pr.m_id + "^FS";
+/*
+    Format the text line data:
+        Line 1: ID CURP
+        Line 2: Father's Last, Mother's last
+        Line 3: First Name, Middle Name
+        Line 4: DOB, Male/Female
+ */
                 String line1Text =  "ID: " + pr.m_id + "  CURP: " + pr.m_curp;
-//                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father + " " + pr.m_mother;
-                String line2Text =  pr.m_first + " " + pr.m_middle + " " + pr.m_father.toUpperCase() + " " + pr.m_mother.toUpperCase();
-                String line3Text = pr.m_dob +  " " + pr.m_gender;
-                 /*
-                    The line1Length can be used to adjust the horizontal position of the
-                    printed line if necessary.
-                  */
-                int line2Length = line2Text.length();
-
-                String line1 = "^XA^FO1,10^FS^FT220," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
-                String line2 = "^FO1,10^FS^FT140," + position + "^A0R,40,40^FD" + line2Text + " " + "^FS";
-//                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + box + "^XZ";
-                String line3 = "^FO1,10^FS^FT55," + position + "^A0R,40,40^FD" + line3Text + "^FS" + qrcode + "^XZ";
-                String fullLine = line1 + line2 + line3;
+                String line2Text =  pr.m_father.toUpperCase() + ", " + pr.m_mother.toUpperCase();
+                String line3Text =  pr.m_first + " " + pr.m_middle;
+                String line4Text = pr.m_dob +  " " + pr.m_gender;
+/*
+    Format the four line with position and font info
+*/
+                String line1 = "^XA^FO1,10^FS^FT225," + position + "^A0R,40,40^FD" + line1Text + " " + "^FS";
+                String line2 = "^FO1,10^FS^FT168," + position + "^A0R,40,40^FD" + line2Text + " " + "^FS";
+                String line3 = "^FO1,10^FS^FT111," + position + "^A0R,40,40^FD" + line3Text + "^FS";
+                String line4 = "^FO1,10^FS^FT54," + position + "^A0R,40,40^FD" + line4Text + "^FS" + qrcode + "^XZ";
+/*
+    Concatenate the four line into a single string and
+    return the complete image to the calling routine to print
+*/
+                String fullLine = line1 + line2 + line3 + line4;
                 configLabel = fullLine.getBytes();
 
             } else if (printerLanguage == PrinterLanguage.CPCL) {
@@ -340,24 +327,6 @@ public class MainActivity extends AppCompatActivity {
     }
 */
 
-    private void printQRCode() {
-        try {
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.qr);
-            ZebraImageI zebraImageI = ZebraImageFactory.getImage(icon);
-            // fiddle here with position, size.
-            // w/h -1 is use original size, which is certainly wrong.
-            // docs for printImage at https://techdocs.zebra.com/link-os/2-14/pc/content/com/zebra/sdk/graphics/class-use/ZebraImageI.html
-            // GraphicsUtil.printImage(ZebraImageI image, int x, int y, int width, int height, boolean insideFormat)
-//            printer.printImage(zebraImageI,250,0,0,-1,false);
-            printer.printImage(zebraImageI,250,20,0,-1,false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ConnectionException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void doConnectionTest() {
         printer = connect();
 
@@ -371,7 +340,6 @@ public class MainActivity extends AppCompatActivity {
             pat.m_dob = "23OCT2014";
             pat.m_gender = "Male";
             pat.m_curp = "123456789abcdef";
-//            printQRCode();
             sendTestLabel(pat);
         } else {
             disconnect();
