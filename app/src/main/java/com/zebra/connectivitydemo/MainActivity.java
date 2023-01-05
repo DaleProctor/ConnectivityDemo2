@@ -332,6 +332,10 @@ public class MainActivity extends AppCompatActivity {
     private void doConnectionTest() {
         printer = connect();
 
+        WristbandPrinterStatus.ePrinterStatus pStatus;
+
+        pStatus = WristbandPrinterStatus.checkPrinterStatus(printer);
+
         if (printer != null) {
             PatientRecord pat = new PatientRecord();
             pat.m_id = "1234";
@@ -373,6 +377,5 @@ public class MainActivity extends AppCompatActivity {
     private String getTcpPortNumber() {
         return portNumberEditText.getText().toString();
     }
-
 
 }
